@@ -1,0 +1,315 @@
+[
+  {
+    "Naslov": "Billie Jean",
+    "Album": "Thriller",
+    "Izvođači": [
+      "Michael Jackson"
+    ],
+    "Godina_objavljivanja": "1983",
+    "Žanrovi": [
+      "pop",
+      "R&B"
+    ],
+    "Trajanje_(s)": 297,
+    "Izdavačka_kuća": "Epic",
+    "Jezik": "engleski",
+    "Autori": [
+      {
+        "Ime": "Michael",
+        "Prezime": "Jackson"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Quincy",
+        "Prezime": "Jones"
+      },
+      {
+        "Ime": "Michael",
+        "Prezime": "Jackson"
+      }
+    ]
+  },
+  {
+    "Naslov": "Bohemian Rhapsody",
+    "Album": "A Night at the Opera",
+    "Izvođači": [
+      "Queen"
+    ],
+    "Godina_objavljivanja": "1975",
+    "Žanrovi": [
+      "rock"
+    ],
+    "Trajanje_(s)": 355,
+    "Izdavačka_kuća": "EMI",
+    "Jezik": "engleski",
+    "Autori": [
+      {
+        "Ime": "Freddie",
+        "Prezime": "Mercury"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Roy Thomas",
+        "Prezime": "Baker"
+      }
+    ]
+  },
+  {
+    "Naslov": "Čarobno jutro",
+    "Album": "Ljubav",
+    "Izvođači": [
+      "Nina Badrić"
+    ],
+    "Godina_objavljivanja": "2003",
+    "Žanrovi": [
+      "pop"
+    ],
+    "Trajanje_(s)": 175,
+    "Izdavačka_kuća": "Aquarius Records",
+    "Jezik": "hrvatski",
+    "Autori": [
+      {
+        "Ime": "Daniel",
+        "Prezime": "Troha"
+      },
+      {
+        "Ime": "Sandra",
+        "Prezime": "Sagena"
+      },
+      {
+        "Ime": "Nina",
+        "Prezime": "Badrić"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Daniel",
+        "Prezime": "Troha"
+      }
+    ]
+  },
+  {
+    "Naslov": "Hotel California",
+    "Album": "Hotel California",
+    "Izvođači": [
+      "Eagles"
+    ],
+    "Godina_objavljivanja": "1976",
+    "Žanrovi": [
+      "rock"
+    ],
+    "Trajanje_(s)": 390,
+    "Izdavačka_kuća": "Asylum Records",
+    "Jezik": "engleski",
+    "Autori": [
+      {
+        "Ime": "Don",
+        "Prezime": "Felder"
+      },
+      {
+        "Ime": "Don",
+        "Prezime": "Henley"
+      },
+      {
+        "Ime": "Glenn",
+        "Prezime": "Frey"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Bill",
+        "Prezime": "Szymczyk"
+      }
+    ]
+  },
+  {
+    "Naslov": "Mi plešemo",
+    "Album": "Crno-bijeli svijet",
+    "Izvođači": [
+      "Prljavo Kazalište"
+    ],
+    "Godina_objavljivanja": "1980",
+    "Žanrovi": [
+      "new wave",
+      "rock"
+    ],
+    "Trajanje_(s)": 271,
+    "Izdavačka_kuća": "Suzy",
+    "Jezik": "hrvatski",
+    "Autori": [
+      {
+        "Ime": "Jasenko",
+        "Prezime": "Houra"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Ivan",
+        "Prezime": "Stančić"
+      }
+    ]
+  },
+  {
+    "Naslov": "Moja štikla",
+    "Album": "Moja štikla / Moj sokole (EP)",
+    "Izvođači": [
+      "Severina"
+    ],
+    "Godina_objavljivanja": "2006",
+    "Žanrovi": [
+      "pop",
+      "folk"
+    ],
+    "Trajanje_(s)": 178,
+    "Izdavačka_kuća": "Dallas Records",
+    "Jezik": "hrvatski",
+    "Autori": [
+      {
+        "Ime": "Boris",
+        "Prezime": "Novković"
+      },
+      {
+        "Ime": "Franjo",
+        "Prezime": "Valentić"
+      },
+      {
+        "Ime": "Severina",
+        "Prezime": "Vučković"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Goran",
+        "Prezime": "Bregović"
+      }
+    ]
+  },
+  {
+    "Naslov": "One Kiss",
+    "Album": "single",
+    "Izvođači": [
+      "Calvin Harris",
+      "Dua Lipa"
+    ],
+    "Godina_objavljivanja": "2018",
+    "Žanrovi": [
+      "house",
+      "electronic"
+    ],
+    "Trajanje_(s)": 214,
+    "Izdavačka_kuća": "Columbia",
+    "Jezik": "engleski",
+    "Autori": [
+      {
+        "Ime": "Adam",
+        "Prezime": "Wiles"
+      },
+      {
+        "Ime": "Dua",
+        "Prezime": "Lipa"
+      },
+      {
+        "Ime": "Jessie",
+        "Prezime": "Reyez"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Calvin",
+        "Prezime": "Harris"
+      }
+    ]
+  },
+  {
+    "Naslov": "Someone Like You",
+    "Album": "21",
+    "Izvođači": [
+      "Adele"
+    ],
+    "Godina_objavljivanja": "2011",
+    "Žanrovi": [
+      "soul",
+      "pop"
+    ],
+    "Trajanje_(s)": 285,
+    "Izdavačka_kuća": "XL Recordings",
+    "Jezik": "engleski",
+    "Autori": [
+      {
+        "Ime": "Adele",
+        "Prezime": "Adkins"
+      },
+      {
+        "Ime": "Dan",
+        "Prezime": "Wilson"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Dan",
+        "Prezime": "Wilson"
+      }
+    ]
+  },
+  {
+    "Naslov": "Ti si mi u mislima",
+    "Album": "Dino Dvornik",
+    "Izvođači": [
+      "Dino Dvornik"
+    ],
+    "Godina_objavljivanja": "1989",
+    "Žanrovi": [
+      "funk",
+      "pop rock"
+    ],
+    "Trajanje_(s)": 257,
+    "Izdavačka_kuća": "Jugoton",
+    "Jezik": "hrvatski",
+    "Autori": [
+      {
+        "Ime": "Dino",
+        "Prezime": "Dvornik"
+      },
+      {
+        "Ime": "Goran",
+        "Prezime": "Kralj"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Dino",
+        "Prezime": "Dvornik"
+      }
+    ]
+  },
+  {
+    "Naslov": "Zamisli život u ritmu muzike za ples",
+    "Album": "Novo! Novo! Novo!",
+    "Izvođači": [
+      "Film",
+      "Jura Stublić"
+    ],
+    "Godina_objavljivanja": "1981",
+    "Žanrovi": [
+      "rock",
+      "new wave"
+    ],
+    "Trajanje_(s)": 240,
+    "Izdavačka_kuća": "Jugoton",
+    "Jezik": "hrvatski",
+    "Autori": [
+      {
+        "Ime": "Jura",
+        "Prezime": "Stublić"
+      }
+    ],
+    "Producenti": [
+      {
+        "Ime": "Boris",
+        "Prezime": "Bele"
+      }
+    ]
+  }
+]
