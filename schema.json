@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "pjesme.json",
+  "title": "Skup otvorenih podataka (pjesme)",
+  "description": "Skup podataka sadrži 10 popularnih pjesama različitih kategorija i karakteristika, svi podaci su prikupljeni iz javno dostupnih izvora.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "title": "pjesma",
+    "description": "Objekt koji sadrži podatke o jednoj pjesmi.",
+    "required": ["Naslov", "Album", "Izvođači", "Godina_objavljivanja"],
+    "properties": {
+      "Naslov": {
+        "type": "string",
+        "title": "Naslov",
+        "description": "Naslov pjesme."
+      },
+      "Album": {
+        "type": "string",
+        "title": "Album",
+        "description": "Naziv albuma na kojem se pjesma nalazi (može biti i EP ili single ako nije izdata na albumu)."
+      },
+      "Izvođači": {
+        "type": "array",
+        "title": "Izvođači",
+        "description": "Popis izvođača pjesme (pjevači, bendovi i slično).",
+        "items": {
+          "type": "string"
+        }
+      },
+      "Godina_objavljivanja": {
+        "type": "string",
+        "title": "Godina objavljivanja",
+        "description": "Godina objavljivanja pjesme."
+      },
+      "Žanrovi": {
+        "type": "array",
+        "title": "Žanrovi",
+        "description": "Žanrovi pjesme.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "Trajanje_(s)": {
+        "type": "number",
+        "title": "Trajanje (s)",
+        "description": "Trajanje pjesme u sekundama."
+      },
+      "Izdavačka_kuća": {
+        "type": "string",
+        "title": "Izdavačka kuća",
+        "description": "Naziv izdavačke kuće."
+      },
+      "Jezik": {
+        "type": "string",
+        "title": "Jezik",
+        "description": "Jezik pjesme."
+      },
+      "Autori": {
+        "type": "array",
+        "title": "Autori",
+        "description": "Autori pjesme.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "Ime": {
+              "type": "string",
+              "title": "Ime autora"
+            },
+            "Prezime": {
+              "type": "string",
+              "title": "Prezime autora"
+            }
+          },
+          "required": ["Ime", "Prezime"]
+        }
+      },
+      "Producenti": {
+        "type": "array",
+        "title": "Producenti",
+        "description": "Producenti pjesme.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "Ime": {
+              "type": "string",
+              "title": "Ime producenta"
+            },
+            "Prezime": {
+              "type": "string",
+              "title": "Prezime producenta"
+            }
+          },
+          "required": ["Ime", "Prezime"]
+        }
+      }
+    }
+  }
+}

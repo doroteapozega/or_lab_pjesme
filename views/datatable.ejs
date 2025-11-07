@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tablica</title>
+    <style>
+      body {
+        background-color: floralwhite;
+        color: black;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 45px;
+        margin-top: 0;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 30px;
+      }
+      input,
+      select,
+      button {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 50px;
+        border: 1px solid gray;
+        background-color: white;
+      }
+      button {
+        background-color: plum;
+        color: black;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: purple;
+        color: white;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid gray;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: lavender;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="back">Natrag</button>
+    <h1>Tablica pjesama</h1>
+    <input id="q" placeholder="traži..." />
+    <select id="field">
+      <option value="all">Sva polja (wildcard)</option>
+      <option value="naslov">Naslov</option>
+      <option value="album">Album</option>
+      <option value="izvodaci">Izvođači</option>
+      <option value="godina_objavljivanja">Godina objavljivanja</option>
+      <option value="zanrovi">Žanrovi</option>
+      <option value="trajanje_s">Trajanje (s)</option>
+      <option value="izdavacka_kuca">Izdavačka kuća</option>
+      <option value="jezik">Jezik</option>
+      <option value="autori">Autori</option>
+      <option value="producenti">Producenti</option>
+    </select>
+    <button id="go">Traži</button>
+    <button id="reset">Reset</button>
+    <button id="csv">Preuzmi CSV</button>
+    <button id="json">Preuzmi JSON</button>
+    <table id="t" border="1">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+    <script>
+      document.getElementById("back").onclick = () => {
+        window.location.href = "/";
+      };
+      // i u ovom dijelu pomagao ChatGPT (za ispravan rad svega vezanog uz baze)
+      async function getData(q = "", field = "all") {
+        const url = `/api/pjesme?q=${encodeURIComponent(
+          q
+        )}&field=${encodeURIComponent(field)}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          alert("Greška pri dohvaćanju podataka");
+          return [];
+        }
+        const data = await res.json();
+        return data;
+      }
+      function renderTable(rows) {
+        const thead = document.querySelector("#t thead");
+        const tbody = document.querySelector("#t tbody");
+        thead.innerHTML = "";
+        tbody.innerHTML = "";
+        if (!rows || rows.length === 0) {
+          thead.innerHTML = "<tr><th>Nema rezultata</th></tr>";
+          return;
+        }
+        const keys = Object.keys(rows[0]);
+        const trh = document.createElement("tr");
+        keys.forEach((k) => {
+          const th = document.createElement("th");
+          th.textContent = k;
+          trh.appendChild(th);
+        });
+        thead.appendChild(trh);
+        rows.forEach((r) => {
+          const tr = document.createElement("tr");
+          keys.forEach((k) => {
+            const td = document.createElement("td");
+            let v = r[k];
+            if (Array.isArray(v)) {
+              if (v.length && typeof v[0] === "object") {
+                v = v
+                  .map((x) => x.Ime + (x.Prezime ? " " + x.Prezime : ""))
+                  .join(", ");
+              } else {
+                v = v.join(", ");
+              }
+            }
+            td.textContent = v === null || v === undefined ? "" : v;
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+      }
+      document.getElementById("go").onclick = async () => {
+        const q = document.getElementById("q").value;
+        const field = document.getElementById("field").value;
+        const rows = await getData(q, field);
+        renderTable(rows);
+      };
+      document.getElementById("reset").onclick = async () => {
+        document.getElementById("q").value = "";
+        document.getElementById("field").value = "all";
+        const rows = await getData();
+        renderTable(rows);
+      };
+      document.getElementById("csv").onclick = () => {
+        const q = document.getElementById("q").value;
+        const field = document.getElementById("field").value;
+        window.location = `/export/csv?q=${encodeURIComponent(
+          q
+        )}&field=${encodeURIComponent(field)}`;
+      };
+      document.getElementById("json").onclick = () => {
+        const q = document.getElementById("q").value;
+        const field = document.getElementById("field").value;
+        window.location = `/export/json?q=${encodeURIComponent(
+          q
+        )}&field=${encodeURIComponent(field)}`;
+      };
+      (async () => {
+        const rows = await getData();
+        renderTable(rows);
+      })();
+    </script>
+  </body>
+</html>
