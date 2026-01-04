@@ -1,0 +1,409 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Open Dataset API (Songs)",
+    "version": "1.0",
+    "contact": {
+      "name": "Dorotea Požega",
+      "email": "dorotea.pozega@fer.hr"
+    },
+    "license": {
+      "name": "CC0 1.0 Universal",
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/pjesme": {
+      "get": {
+        "summary": "Fetch all songs",
+        "description": "Returns a list of all songs in the dataset",
+        "responses": {
+          "200": {
+            "description": "Fetched all songs successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new song",
+        "description": "Adds a new song to the dataset",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pjesma"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Song added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "All fields are required"
+          },
+          "409": {
+            "description": "Song by the same name already exists"
+          },
+          "500": {
+            "description": "Failed to add the song"
+          }
+        }
+      }
+    },
+    "/pjesme/{naslov}": {
+      "get": {
+        "summary": "Fetch a song by title",
+        "description": "Returns a single song based on its title (ID)",
+        "parameters": [
+          {
+            "name": "naslov",
+            "in": "path",
+            "required": true,
+            "description": "Title of the song",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Song fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Song with the given name doesn't exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a song",
+        "description": "Updates an existing song (only provided fields will be updated)",
+        "parameters": [
+          {
+            "name": "naslov",
+            "in": "path",
+            "required": true,
+            "description": "Current title of the song (used as ID)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pjesma"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Song updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Song not found"
+          },
+          "500": {
+            "description": "Failed to update the song info"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a song",
+        "description": "Deletes a song from the dataset",
+        "parameters": [
+          {
+            "name": "naslov",
+            "in": "path",
+            "required": true,
+            "description": "Title of the song to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Song deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Song not found"
+          },
+          "500": {
+            "description": "Failed to delete the song"
+          }
+        }
+      }
+    },
+    "/pjesme/godina/{godina}": {
+      "get": {
+        "summary": "Fetch songs by year",
+        "description": "Returns all songs released in a specific year",
+        "parameters": [
+          {
+            "name": "godina",
+            "in": "path",
+            "required": true,
+            "description": "Release year",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetched all songs successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are no songs released in this year"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/pjesme/zanr/{zanr}": {
+      "get": {
+        "summary": "Fetch songs by genre",
+        "description": "Returns all songs of a specific genre",
+        "parameters": [
+          {
+            "name": "zanr",
+            "in": "path",
+            "required": true,
+            "description": "Music genre",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetched all songs successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No songs found in this genre"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/pjesme/izdavacka_kuca/{izdavacka_kuca}": {
+      "get": {
+        "summary": "Fetch songs by record label",
+        "description": "Returns all songs from a specific record label",
+        "parameters": [
+          {
+            "name": "izdavacka_kuca",
+            "in": "path",
+            "required": true,
+            "description": "Record label",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetched all songs successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWrapper"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No songs released by this record label"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "message": {
+            "type": "string",
+            "example": "Fetched all songs successfully"
+          },
+          "response": {
+            "oneOf": [
+              { "$ref": "#/components/schemas/Pjesma" },
+              {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/Pjesma" }
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "Pjesma": {
+        "type": "object",
+        "required": [
+          "Naslov",
+          "Album",
+          "Godina_objavljivanja",
+          "Trajanje_(s)",
+          "Izdavačka_kuća",
+          "Jezik",
+          "Izvođači",
+          "Žanrovi",
+          "Autori",
+          "Producenti"
+        ],
+        "properties": {
+          "Naslov": {
+            "type": "string",
+            "example": "Billie Jean"
+          },
+          "Album": {
+            "type": "string",
+            "example": "Thriller"
+          },
+          "Izvođači": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["Michael Jackson"]
+          },
+          "Godina_objavljivanja": {
+            "type": "string",
+            "example": "1983"
+          },
+          "Žanrovi": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["pop", "R&B"]
+          },
+          "Trajanje_(s)": {
+            "type": "integer",
+            "example": 297
+          },
+          "Izdavačka_kuća": {
+            "type": "string",
+            "example": "Epic"
+          },
+          "Jezik": {
+            "type": "string",
+            "example": "engleski"
+          },
+          "Autori": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Ime": {
+                  "type": "string",
+                  "example": "Michael"
+                },
+                "Prezime": {
+                  "type": "string",
+                  "example": "Jackson"
+                }
+              }
+            }
+          },
+          "Producenti": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Ime": {
+                  "type": "string",
+                  "example": "Quincy"
+                },
+                "Prezime": {
+                  "type": "string",
+                  "example": "Jones"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
