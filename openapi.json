@@ -22,7 +22,7 @@
     "/pjesme": {
       "get": {
         "summary": "Fetch all songs",
-        "description": "Returns a list of all songs in the dataset",
+        "description": "Returns a list of all songs in the dataset in JSON-LD format",
         "responses": {
           "200": {
             "description": "Fetched all songs successfully",
@@ -78,7 +78,7 @@
     "/pjesme/{naslov}": {
       "get": {
         "summary": "Fetch a song by title",
-        "description": "Returns a single song based on its title (ID)",
+        "description": "Returns a single song based on its title (ID) in JSON-LD format",
         "parameters": [
           {
             "name": "naslov",
@@ -189,7 +189,7 @@
     "/pjesme/godina/{godina}": {
       "get": {
         "summary": "Fetch songs by year",
-        "description": "Returns all songs released in a specific year",
+        "description": "Returns all songs released in a specific year in JSON-LD format",
         "parameters": [
           {
             "name": "godina",
@@ -224,7 +224,7 @@
     "/pjesme/zanr/{zanr}": {
       "get": {
         "summary": "Fetch songs by genre",
-        "description": "Returns all songs of a specific genre",
+        "description": "Returns all songs of a specific genre in JSON-LD format",
         "parameters": [
           {
             "name": "zanr",
@@ -259,7 +259,7 @@
     "/pjesme/izdavacka_kuca/{izdavacka_kuca}": {
       "get": {
         "summary": "Fetch songs by record label",
-        "description": "Returns all songs from a specific record label",
+        "description": "Returns all songs from a specific record label in JSON-LD format",
         "parameters": [
           {
             "name": "izdavacka_kuca",
