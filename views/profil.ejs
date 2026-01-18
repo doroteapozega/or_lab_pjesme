@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Korisnički profil</title>
+    <style>
+      body {
+        background-color: floralwhite;
+        color: black;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 65px;
+      }
+      .profile-card {
+        max-width: 450px;
+        margin: 0 auto;
+        background: lavender;
+        padding: 25px;
+        border-radius: 15px;
+        border: 1px solid lightgray;
+      }
+      .profile-item {
+        margin: 15px 0;
+        padding: 8px 0;
+        border-bottom: 1px solid lightgrey;
+      }
+      .buttons {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 150px;
+      }
+      a {
+        display: block;
+        text-decoration: none;
+        background-color: plum;
+        color: black;
+        padding: 10px 10px;
+        border-radius: 50px;
+        border: 1px solid gray;
+        text-align: center;
+        font-size: 17px;
+      }
+      a:hover {
+        color: white;
+        background-color: purple;
+      }
+      h2 {
+        text-align: left;
+        margin-bottom: 25px;
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Korisnički profil</h1>
+    <div class="profile-card">
+      <h2>Podaci iz Auth0 profila:</h2>
+      <div class="profile-item">
+        <strong>Ime i prezime:</strong> <%= user.name || 'Nepoznato' %>
+      </div>
+      <div class="profile-item"><strong>Email:</strong> <%= user.email %></div>
+      <div class="profile-item">
+        <strong>Nadimak:</strong> <%= user.nickname || 'Nema' %>
+      </div>
+      <div class="profile-item">
+        <strong>Korisnički ID:</strong> <%= user.sub %>
+      </div>
+      <div class="buttons">
+        <a href="/">Natrag na početnu</a>
+      </div>
+    </div>
+  </body>
+</html>
