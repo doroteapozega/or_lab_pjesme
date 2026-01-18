@@ -1,8 +1,12 @@
 // import potrebnih paketa
 const express = require("express");
 const { Pool } = require("pg");
+const dotenv = require("dotenv");
+const { auth, requiresAuth } = require("express-openid-connect");
+const fs = require("fs").promises;
 
 // osnovna konfiguracija aplikacije za rad
+dotenv.config();
 const app = express();
 app.use(express.json()); // za parsiranje JSON tijela zahtjeva
 app.set("view engine", "ejs");
@@ -15,6 +19,18 @@ const pool = new Pool({
   password: "G26XFCXW",
   port: 5432,
 });
+
+// konfiguracija autentifikacije (prijava korisnika)
+const config = {
+  authRequired: false, // nije u cijeloj aplikaciji potrebno (pocetna se prikaze svima npr.)
+  auth0Logout: false, // kada se odjavimo s nase aplikacije da ipak ostanemo prijavljeni na auth0 (pa pri ponovnoj prijavi nema potrebe za upisivanjem korisnickog imena i lozinke)
+  secret: process.env.SESSION_SECRET,
+  baseURL: process.env.AUTH0_BASE_URL,
+  clientID: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
+};
+app.use(auth(config));
 
 // response wrapper fja
 function responseWrapper(status, message, response = null) {
@@ -105,10 +121,12 @@ app.get("/api/v1/pjesme", async (req, res) => {
       ORDER BY p.naslov;
     `;
     const result = await pool.query(sql);
+    // dodan JSON-LD za API
+    const pjesmeJSONLD = result.rows.map(dodajJSONLD);
     res
       .status(200)
       .json(
-        responseWrapper("OK", "Fetched all songs successfully", result.rows)
+        responseWrapper("OK", "Fetched all songs successfully", pjesmeJSONLD),
       );
   } catch (error) {
     console.error(error);
@@ -143,15 +161,14 @@ app.get("/api/v1/pjesme/:naslov", async (req, res) => {
           responseWrapper(
             "Not Found",
             `Song with the name '${naslov}' doesn't exist`,
-            null
-          )
+            null,
+          ),
         );
     } else {
+      const pjesmaJSONLD = dodajJSONLD(result.rows[0]);
       res
         .status(200)
-        .json(
-          responseWrapper("OK", "Song fetched successfully", result.rows[0])
-        );
+        .json(responseWrapper("OK", "Song fetched successfully", pjesmaJSONLD));
     }
   } catch (error) {
     console.error(error);
@@ -187,14 +204,15 @@ app.get("/api/v1/pjesme/godina/:godina", async (req, res) => {
           responseWrapper(
             "Not Found",
             `There are no songs released in ${godina}`,
-            null
-          )
+            null,
+          ),
         );
     } else {
+      const pjesmeJSONLD = result.rows.map(dodajJSONLD);
       res
         .status(200)
         .json(
-          responseWrapper("OK", "Fetched all songs successfully", result.rows)
+          responseWrapper("OK", "Fetched all songs successfully", pjesmeJSONLD),
         );
     }
   } catch (error) {
@@ -229,13 +247,14 @@ app.get("/api/v1/pjesme/zanr/:zanr", async (req, res) => {
       res
         .status(404)
         .json(
-          responseWrapper("Not Found", `No songs in the '${zanr}' genre`, null)
+          responseWrapper("Not Found", `No songs in the '${zanr}' genre`, null),
         );
     } else {
+      const pjesmeJSONLD = result.rows.map(dodajJSONLD);
       res
         .status(200)
         .json(
-          responseWrapper("OK", "Fetched all songs successfully", result.rows)
+          responseWrapper("OK", "Fetched all songs successfully", pjesmeJSONLD),
         );
     }
   } catch (error) {
@@ -269,13 +288,14 @@ app.get("/api/v1/pjesme/izdavacka_kuca/:izdavacka_kuca", async (req, res) => {
       res
         .status(404)
         .json(
-          responseWrapper("Not Found", `No songs released by '${kuca}'`, null)
+          responseWrapper("Not Found", `No songs released by '${kuca}'`, null),
         );
     } else {
+      const pjesmeJSONLD = result.rows.map(dodajJSONLD);
       res
         .status(200)
         .json(
-          responseWrapper("OK", "Fetched all songs successfully", result.rows)
+          responseWrapper("OK", "Fetched all songs successfully", pjesmeJSONLD),
         );
     }
   } catch (error) {
@@ -325,8 +345,8 @@ app.post("/api/v1/pjesme", async (req, res) => {
           responseWrapper(
             "Conflict",
             `Song by the name '${Naslov}' already exists`,
-            null
-          )
+            null,
+          ),
         );
     }
     await pool.query("BEGIN");
@@ -408,7 +428,7 @@ app.post("/api/v1/pjesme", async (req, res) => {
     res
       .status(201)
       .json(
-        responseWrapper("Created", "Song added successfully", created.rows[0])
+        responseWrapper("Created", "Song added successfully", created.rows[0]),
       );
   } catch (error) {
     await pool.query("ROLLBACK");
@@ -440,8 +460,8 @@ app.put("/api/v1/pjesme/:naslov", async (req, res) => {
           responseWrapper(
             "Not Found",
             `Song by the name '${stariNaslov}' not found`,
-            null
-          )
+            null,
+          ),
         );
     }
     // azuriramo glavne podatke o pjesmi
@@ -496,7 +516,7 @@ app.put("/api/v1/pjesme/:naslov", async (req, res) => {
     res
       .status(200)
       .json(
-        responseWrapper("OK", "Song updated successfully", updated.rows[0])
+        responseWrapper("OK", "Song updated successfully", updated.rows[0]),
       );
   } catch (error) {
     console.error(error);
@@ -520,8 +540,8 @@ app.delete("/api/v1/pjesme/:naslov", async (req, res) => {
           responseWrapper(
             "Not Found",
             `Song by the name '${naslov}' not found`,
-            null
-          )
+            null,
+          ),
         );
     }
     // obrisi pjesmu
@@ -530,7 +550,7 @@ app.delete("/api/v1/pjesme/:naslov", async (req, res) => {
     res
       .status(200)
       .json(
-        responseWrapper("OK", `Song '${naslov}' successfully deleted`, null)
+        responseWrapper("OK", `Song '${naslov}' successfully deleted`, null),
       );
   } catch (error) {
     console.error(error);
@@ -546,14 +566,147 @@ app.get("/api/v1/openapi.json", (req, res) => {
   res.sendFile(__dirname + "/openapi.json");
 });
 
+// stvari dodane za 4. lab nakon
+
+// fja za dodavanje JSON-LD semantike
+function dodajJSONLD(pjesma) {
+  return {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      Naslov: "name",
+      Album: "inAlbum",
+      Izvođači: "byArtist",
+      Godina_objavljivanja: "datePublished",
+      Žanrovi: "genre",
+      "Trajanje_(s)": "duration",
+      Izdavačka_kuća: "publisher",
+      Jezik: "inLanguage",
+      Autori: "creator",
+      Producenti: "producer",
+      Ime: "givenName",
+      Prezime: "familyName",
+    },
+    "@type": "MusicRecording",
+    ...pjesma,
+    Autori: pjesma.Autori?.map((a) => ({
+      "@type": "Person",
+      ...a,
+    })),
+    Producenti: pjesma.Producenti?.map((p) => ({
+      "@type": "Person",
+      ...p,
+    })),
+  };
+}
+
 // pocetna stranica
 app.get("/", (req, res) => {
-  res.render("index");
+  const isAuthenticated = req.oidc.isAuthenticated();
+  res.render("index", {
+    user: req.oidc.user,
+    isAuthenticated: isAuthenticated,
+  });
 });
 
 // stranica s tablicom
 app.get("/datatable", (req, res) => {
-  res.render("datatable");
+  res.render("datatable", {
+    user: req.oidc.user,
+    isAuthenticated: req.oidc.isAuthenticated(),
+  });
+});
+
+// profil korisnika
+app.get("/profil", requiresAuth(), (req, res) => {
+  res.render("profil", {
+    user: req.oidc.user,
+    title: "Korisnički profil",
+  });
+});
+
+// osvjezi preslike baze
+app.get("/osvjezi-preslike", requiresAuth(), async (req, res) => {
+  try {
+    // dohvati sve pjesme iz baze
+    const sql = `
+      SELECT
+        p.naslov AS "Naslov",
+        p.album AS "Album",
+        (SELECT array_agg(i.imena) FROM izvodaci i WHERE i.pjesma = p.naslov) AS "Izvođači",
+        p.godina_objavljivanja::text AS "Godina_objavljivanja",
+        (SELECT array_agg(z.zanr) FROM zanrovi z WHERE z.pjesma = p.naslov) AS "Žanrovi",
+        p.trajanje_s AS "Trajanje_(s)",
+        p.izdavacka_kuca AS "Izdavačka_kuća",
+        p.jezik AS "Jezik",
+        (SELECT json_agg(json_build_object('Ime', a.ime, 'Prezime', a.prezime)) FROM autori a WHERE a.pjesma = p.naslov) AS "Autori",
+        (SELECT json_agg(json_build_object('Ime', pr.ime, 'Prezime', pr.prezime)) FROM producenti pr WHERE pr.pjesma = p.naslov) AS "Producenti"
+      FROM pjesme p
+      ORDER BY p.naslov;
+    `;
+    const result = await pool.query(sql);
+    // sprema u pjesme.json
+    const fs = require("fs").promises;
+    await fs.writeFile(
+      "pjesme.json",
+      JSON.stringify(result.rows, null, 2),
+      "utf8",
+    );
+
+    // spremamo podatke u pjesme.csv
+    const header =
+      "Naslov,Album,Izvođači,Godina_objavljivanja,Žanrovi,Trajanje_(s),Izdavačka_kuća,Jezik,Autori,Producenti\n";
+    let csv = header;
+    for (const row of result.rows) {
+      const naslov = (row["Naslov"] || "").toString().replace(/"/g, '""');
+      const album = (row["Album"] || "").toString().replace(/"/g, '""');
+      const izv = (row["Izvođači"] || []).join(", ");
+      const god = row["Godina_objavljivanja"] || "";
+      const zan = (row["Žanrovi"] || []).join(", ");
+      const traj = row["Trajanje_(s)"] || "";
+      const kuca = (row["Izdavačka_kuća"] || "").toString().replace(/"/g, '""');
+      const jezik = (row["Jezik"] || "").toString().replace(/"/g, '""');
+      const autoriArr = row["Autori"] || [];
+      const autoriStr = (
+        Array.isArray(autoriArr)
+          ? autoriArr.map((a) => `${a.Ime} ${a.Prezime}`)
+          : []
+      ).join(", ");
+      const producentiArr = row["Producenti"] || [];
+      const producentiStr = (
+        Array.isArray(producentiArr)
+          ? producentiArr.map((p) => `${p.Ime} ${p.Prezime}`)
+          : []
+      ).join(", ");
+      function qv(s) {
+        if (s === null || s === undefined) return "";
+        const str = s.toString();
+        if (str.includes(",") || str.includes('"') || str.includes("\n"))
+          return `"${str.replace(/"/g, '""')}"`;
+        return str;
+      }
+      const line =
+        [
+          qv(naslov),
+          qv(album),
+          qv(izv),
+          qv(god),
+          qv(zan),
+          qv(traj),
+          qv(kuca),
+          qv(jezik),
+          qv(autoriStr),
+          qv(producentiStr),
+        ].join(",") + "\n";
+      csv += line;
+    }
+    await fs.writeFile("pjesme.csv", csv, "utf8");
+    res
+      .status(200)
+      .json(responseWrapper("OK", `Files successfully updated`, null));
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Error while updating files!");
+  }
 });
 
 // fja koja pomaze kod filtriranja (vraca pjesme koje odgovaraju filtriranom upitu)
@@ -685,8 +838,8 @@ app.use((req, res) => {
       responseWrapper(
         "Not Found",
         `Endpoint '${req.method} ${req.originalUrl}' does not exist`,
-        null
-      )
+        null,
+      ),
     );
 });
 
