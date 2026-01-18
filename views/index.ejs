@@ -19,12 +19,12 @@
       h1 {
         text-align: center;
         color: black;
-        margin-bottom: 75px;
+        margin-bottom: 55px;
       }
       p {
         text-align: center;
         color: black;
-        margin-bottom: 75px;
+        margin-bottom: 45px;
         font-size: 17px;
       }
       ul {
@@ -68,6 +68,29 @@
       <li><a href="/download/csv">Preuzimanje podataka u CSV formatu</a></li>
       <li><a href="/datatable">Pregled podataka u tablici</a></li>
       <li><a href="/download/schema">Preuzimanje JSON scheme</a></li>
+      <% if (isAuthenticated) { %>
+      <li><a href="/profil">Korisnički profil</a></li>
+      <li><a href="#" id="osvjezigumb">Osvježi preslike</a></li>
+      <li><a href="/logout">Odjava</a></li>
+      <% } else { %>
+      <li><a href="/login">Prijava za dodatne opcije</a></li>
+      <% } %>
     </ul>
+    <script>
+      document.getElementById("osvjezigumb")?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          const res = await fetch("/osvjezi-preslike", { method: "GET" });
+          const data = await res.json();
+          if (res.ok) {
+            alert("Preslike uspješno osvježene!");
+          } else {
+            alert("Greška: " + (data.message || "Nepoznata greška"));
+          }
+        } catch (err) {
+          alert("Dogodila se greška pri osvježavanju preslika.");
+        }
+      });
+    </script>
   </body>
 </html>
